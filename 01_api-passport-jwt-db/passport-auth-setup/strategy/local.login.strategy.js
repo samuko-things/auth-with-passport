@@ -3,14 +3,14 @@ const {UserModel: User} = require("../../models/user.model");
 
 
 //--------------- local(login) strategy ----------------//
-const localStrategy = new LocalStrategy(
+const localLoginStrategy = new LocalStrategy(
   {
-    usernameField: "username",
+    usernameField: "email",
     passwordField: "password",
   },
-  async (username, password, done) => {
+  async (email, password, done) => {
     try {
-      const user = await User.findOne({username: username});
+      const user = await User.findOne({email: email});
       if (!user){
         const myErr = Error("Invalid Credentials [username]");
         throw myErr;

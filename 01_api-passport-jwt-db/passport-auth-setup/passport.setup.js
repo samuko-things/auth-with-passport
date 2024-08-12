@@ -1,10 +1,12 @@
 const passport = require("passport");
-const {localStrategy} = require("./strategy/local.strategy");
-const {jwtStrategy} = require("./strategy/jwt.strategy");
+const { localLoginStrategy } = require("./strategy/local.login.strategy");
+const { localSignupStrategy } = require("./strategy/local.signup.strategy");
+const { jwtStrategy } = require("./strategy/jwt.strategy");
 
 
-const configurePassport =  (app) => {
-  passport.use(localStrategy);
+const configurePassport = (app) => {
+  passport.use('local-signup',localSignupStrategy);
+  passport.use('local-login',localLoginStrategy);
   passport.use(jwtStrategy);
   app.use(passport.initialize());
 }

@@ -6,7 +6,7 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 const loginUser = (req, res, next) => {
-  passport.authenticate("local", {session: false},
+  passport.authenticate("local-login", {session: false},
   (err, user, info) => {
     if (err) {
       const myErr = new Error("[UNAUTHORIZED] Cannot Login Unregistered User");
@@ -14,57 +14,49 @@ const loginUser = (req, res, next) => {
     }
 
     const token = jwt.sign(
-      {_id: user._id, username: user.username},
+      {_id: user._id, email: user.email},
       `${process.env.JWT_SECRET}`,
       {expiresIn: `${process.env.JWT_LIFETIME}`}
     );
 
+    console.log("LOGIN SUCCESSFUL");
     return res.status(200).json({
       success:true,
       message:"LOGIN SUCCESSFUL",
       data:{
-        user: {
-          id: user._id,
-          username: user.username,
-        },
         token: token
       }
     });
   }) (req, res, next)
 };
 
-const signupUser = async (req, res, next) => {
-  try {
-    const {username, password} = req.body;
 
-    const user = new User({
-      username: username,
-      password: password
-    });
-    const savedUser = await user.save();
-    console.log("Created new user");
+const signupUser = (req, res, next) => {
+  passport.authenticate("local-signup", {session: false},
+  (err, user, info) => {
+    if (err) {
+      return next(err);
+    }
 
     const token = jwt.sign(
-      {_id: savedUser._id, username: savedUser.username},
+      {_id: user._id, email: user.email},
       `${process.env.JWT_SECRET}`,
       {expiresIn: `${process.env.JWT_LIFETIME}`}
     );
 
+    console.log("SIGNUP SUCCESSFUL");
     return res.status(200).json({
       success:true,
       message:"SIGNUP SUCCESSFUL",
       data:{
         user: {
-          id: savedUser._id,
-          username: savedUser.username,
+          id: user._id,
+          email: user.email,
         },
         token: token
       }
     });
-    
-  } catch (err) {
-    return next(err);
-  }
+  }) (req, res, next)
 };
 
 

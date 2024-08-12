@@ -4,7 +4,12 @@ const bcrypt = require("bcrypt");
 const collectionName = 'user';
 
 const UserSchema = mongoose.Schema({
-  username: { type: mongoose.Schema.Types.String, required: true, unique: true },
+  email: {type: mongoose.Schema.Types.String, required: true, unique: true,
+    match: [
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+      "please provide valid email",
+    ]
+  },
   password: { type: mongoose.Schema.Types.String, required: true, minlength: 5 },
 });
 

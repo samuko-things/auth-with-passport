@@ -17,8 +17,8 @@ const authWithJwt = (req, res, next) => {
       return next(myErr);
     }
     
-    const { _id, username} = payload;
-    req.user = { _id: _id, username: username}; // replace the req.user parameter with the payload
+    const { _id, email} = payload;
+    req.user = { _id: _id, email: email}; // replace the req.user parameter with the payload
     return next();
   }) (req, res, next)
 };
